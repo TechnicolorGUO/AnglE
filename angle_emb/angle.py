@@ -450,7 +450,7 @@ class Pooler:
             hidden_states = self.model(output_hidden_states=True, return_dict=True, **inputs).hidden_states[-1]
             outputs = hidden_states[torch.arange(batch_size, device=hidden_states.device), sequence_lengths]
         else:
-            outputs = self.model(**inputs).last_hidden_state
+            outputs = self.model(**inputs).last_hidden_state #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             if self.pooling_strategy == 'cls':
                 outputs = outputs[:, 0]
             elif self.pooling_strategy == 'cls_avg':
@@ -563,15 +563,16 @@ class EvaluateCallback(TrainerCallback):
 
 
 class AnglE:
+    #存到angle.config文件里？
     cfg_file_name = 'angle.config'
     llm_patterns = [r'.*llama.*', r'.*qwen.*', r'.*baichuan.*']
 
     def __init__(self,
-                 model_name_or_path: str,
-                 max_length: int = 512,
+                 model_name_or_path: str,    #模型名称
+                 max_length: int = 512,    #sequence的最大长度 padding或trunking
                  model_kwargs: Optional[Dict] = None,
                  lora_config_kwargs: Optional[Dict] = None,
-                 pooling_strategy: Optional[str] = None,
+                 pooling_strategy: Optional[str] = None,    #池化策略
                  apply_lora: Optional[bool] = None,
                  train_mode: bool = True,
                  load_kbit: Optional[int] = None,
@@ -584,7 +585,7 @@ class AnglE:
                  bellm_class_name: Optional[str] = None,
                  kbit_kwargs: Optional[Dict] = None,
                  **kwargs: Any):
-        super().__init__()
+        super().__init__()    #继承object类？
         self.max_length = max_length
         self.train_mode = train_mode
         self.pooling_strategy = pooling_strategy
@@ -755,6 +756,9 @@ class AnglE:
                                                         torch_dtype=torch_dtype or torch.float16)
                 self.backbone = model
         else:
+            # non-LLMs
+            # non-LLMs
+            # non-LLMs
             # non-LLMs
             if self.apply_lora:
                 model = AutoModel.from_pretrained(pretrained_model_path or model_name_or_path, trust_remote_code=True)
